@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+     
+     <!-- 注入@Controller-->   
+     <context:component-scan base-package="com.oracle.controller" />
+     
+     <!-- 打开springmvc映射器和适配器 -->
+     <mvc:annotation-driven/>
+
+	<!-- 对模型视图名称的解析，即在模型视图名称添加前后缀 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/content/" p:suffix=".jsp"/>
+	 	 
+	 <!-- 拦截器配置 -->
+ 	 <mvc:interceptors>
+	 
+	    <mvc:interceptor>
+	      <mvc:mapping path="/**"/><!--  拦截路径 -->
+	      <bean class="com.oracle.filter.AutoLoginInterceptor"/>
+	    </mvc:interceptor> 
+	    
+	    <mvc:interceptor>
+	      <mvc:mapping path="/**"/> <!-- 拦截路径 -->
+	      <!-- <mvc:exclude-mapping path="/login"/> --><!-- 不拦截的路径 -->
+	      <!-- <mvc:exclude-mapping path="/logout"/> --><!-- >不拦截的路径 -->
+	      <bean class="com.oracle.filter.LoginInterceptor">
+	          <property name="uncheckUrls">
+		         <list>
+		          <value>/index</value>
+		          <value>/login</value>
+		          <value>/logout</value>
+		          <value>/saveLogin</value>
+		          <value>/users/reg</value>
+		          <value>/users/register</value>
+		          <value>/users/backPwd</value>
+		          <value>/users/toBackPwd</value>
+		          <value>/users/saveBackPwd</value>
+		          <value>/users/login</value>
+		          <value>/users/saveLogin</value>
+		         </list>
+		       </property>
+	      </bean>
+	    </mvc:interceptor>
+	    
+	    <mvc:interceptor>
+	      <mvc:mapping path="/**"/> <!-- 拦截路径 -->
+	      <bean class="com.oracle.filter.AuthInterceptor">
+	         <property name="uncheckUrls">
+		         <list>
+		          <value>/index</value>
+		          <value>/login</value>
+		          <value>/logout</value>
+		          <value>/saveLogin</value>
+		          <value>/users/reg</value>
+		          <value>/users/register</value>
+		          <value>/users/backPwd</value>
+		          <value>/users/toBackPwd</value>
+		          <value>/users/saveBackPwd</value>
+		          <value>/users/login</value>
+		          <value>/users/saveLogin</value>
+		          <value>/users/noauth</value>
+		         </list>
+		       </property>
+	      </bean>
+	    </mvc:interceptor> 
+	    
+	 </mvc:interceptors>  
+	 
+	 
+	 <!-- 以下路径不会被当控制器拦截，当静态资源处理 -->
+	 <!-- <mvc:resources mapping="/images/**" location="/images/" /> 
+	 <mvc:resources mapping="/css/**" location="/css/" /> 
+	 <mvc:resources mapping="/js/**" location="/js/" />  --> 
+	 
+	 <!-- 由springmvc对请求进行分类，如果是静态资源，则交给DefaultServlet处理 -->
+	  <!-- <mvc:default-servlet-handler/>  -->
+	 
+</beans>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+       version="3.1" metadata-complete="true">
+       
+      <display-name>ssm0630</display-name>
+	  <welcome-file-list>
+	    <welcome-file>index.html</welcome-file>
+	    <welcome-file>index.htm</welcome-file>
+	    <welcome-file>index.jsp</welcome-file>
+	    <welcome-file>default.html</welcome-file>
+	    <welcome-file>default.htm</welcome-file>
+	    <welcome-file>default.jsp</welcome-file>
+	  </welcome-file-list>
+	  
+	  <!-- 内置的servlet,以下路径文件不会被当做jsp处理 -->
+	  <servlet-mapping>
+	     <servlet-name>default</servlet-name>
+	     <url-pattern>/images/*</url-pattern>
+	     <url-pattern>*.js</url-pattern>
+	     <url-pattern>*.css</url-pattern>
+	     <url-pattern>/js/*</url-pattern>
+	     <!-- <url-pattern>/css/*</url-pattern> -->
+	  </servlet-mapping>
+	  
+	  <!-- 启动spring监听器 -->
+	  <listener>
+	    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	  </listener>
+	  <context-param>
+	    <param-name>contextConfigLocation</param-name>
+	    <param-value>classpath:applicationContext.xml</param-value>
+	  </context-param>
+	  
+	   <!-- 监听应用的创建 -->
+	  <listener>
+		<listener-class>com.oracle.listener.ApplicationListener</listener-class>
+	  </listener>
+	  
+	   <!-- 监听会话的创建 -->
+	  <listener>
+		<listener-class>com.oracle.listener.SessionListener</listener-class>
+	  </listener> 
+	  
+	  <!-- 使用springMvc DispatcherServlet处理以下请求 -->
+	  <servlet>
+	    <servlet-name>springMvc</servlet-name>
+	    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	    <init-param>
+	      <param-name>contextConfigLocation</param-name>
+	      <param-value>classpath:spring-mvc.xml</param-value>
+	    </init-param>
+	    <!-- 容器初始化时就加载
+	    <load-on-startup>1</load-on-startup> -->
+	  </servlet>
+	  <servlet-mapping>
+	    <servlet-name>springMvc</servlet-name>
+	    <url-pattern>/</url-pattern><!--不解析jsp，其它都解析 -->
+	  </servlet-mapping>
+	   
+	  <!-- 配置filter过滤器 -->
+	  <filter>
+	  	<filter-name>DateFilter</filter-name>
+	  	<filter-class>com.oracle.filter.DateFilter</filter-class>
+	  </filter>
+	  <filter-mapping>
+	  	<filter-name>DateFilter</filter-name>
+	  	<servlet-name>springMvc</servlet-name>
+	  </filter-mapping>
+       
+</web-app>
